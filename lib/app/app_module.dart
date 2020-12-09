@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:cuidapet/app/app_widget.dart';
 import 'package:cuidapet/app/modules/home/home_module.dart';
 
+import 'modules/main_page/main_page_page.dart';
+
 class AppModule extends MainModule {
   @override
   List<Bind> get binds => [
@@ -12,7 +14,8 @@ class AppModule extends MainModule {
 
   @override
   List<ModularRouter> get routers => [
-        ModularRouter(Modular.initialRoute, module: HomeModule()),
+        ModularRouter(Modular.initialRoute,
+            child: (context, args) => MainPagePage()),
       ];
 
   @override
