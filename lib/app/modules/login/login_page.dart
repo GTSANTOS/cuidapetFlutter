@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'login_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -96,14 +97,18 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 onPressed: () async {
-                  CustomDio.instance
-                      .get('https://viacep.com.br/ws/01001000/json/')
-                      .then((value) => print(value.data));
+                  //CustomDio.instance
+                  //    .get('https://viacep.com.br/ws/01001000/json/')
+                  //   .then((value) => print(value.data));
                   //await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   //    email: 'gabrielt.santos.gs@gmail.com',
                   //    password: '123456');
                   //final facebookLogin = FacebookLogin();
                   //final result = await facebookLogin.logIn(['email']);
+
+                  //final FirebaseMessaging _firebaseMessaging =
+                  //    FirebaseMessaging();
+                  //print(await _firebaseMessaging.getToken());
                 },
                 color: ThemeUtils.primaryColor,
                 child: Text(
