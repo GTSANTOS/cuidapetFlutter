@@ -1,3 +1,5 @@
+import 'package:cuidapet/app/repository/usuario_repository.dart';
+import 'package:cuidapet/app/services/usuario_services.dart';
 import 'package:cuidapet/app/shared/auth_store.dart';
 
 import 'app_controller.dart';
@@ -12,7 +14,9 @@ import 'modules/main_page/main_page.dart';
 class AppModule extends MainModule {
   @override
   List<Bind> get binds => [
-        $AppController,
+        Bind((i) => AppController()),
+        Bind((i) => UsuarioRepository()),
+        Bind((i) => UsuarioService(i.get())),
         Bind((i) => AuthStore()),
       ];
 

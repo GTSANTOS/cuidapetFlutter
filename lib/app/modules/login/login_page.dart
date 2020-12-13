@@ -4,6 +4,7 @@ import 'package:cuidapet/app/core/dio/custom_dio.dart';
 import 'package:cuidapet/app/shared/components/facebook_button.dart';
 import 'package:cuidapet/app/shared/theme_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'login_controller.dart';
@@ -67,9 +68,17 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Form(
+        key: controller.formKey,
         child: Column(
           children: [
             TextFormField(
+              controller: controller.loginController,
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Login Obrigatório';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                   labelText: 'Login',
                   labelStyle: TextStyle(fontSize: 15),
@@ -79,15 +88,30 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
                   )),
             ),
             SizedBox(height: 20),
-            TextFormField(
-              decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: TextStyle(fontSize: 15),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    gapPadding: 0,
-                  )),
-            ),
+            Observer(builder: (_) {
+              return TextFormField(
+                obscureText: controller.obscureText,
+                controller: controller.senhaController,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Senha Obrigatória';
+                  } else if (value.length < 6) {
+                    return 'Senha deve ter mais de 6 caracteres';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Senha',
+                    labelStyle: TextStyle(fontSize: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      gapPadding: 0,
+                    ),
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.lock),
+                        onPressed: () => controller.mostrarSenhaUsuario())),
+              );
+            }),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
@@ -96,20 +120,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                onPressed: () async {
-                  //CustomDio.instance
-                  //    .get('https://viacep.com.br/ws/01001000/json/')
-                  //   .then((value) => print(value.data));
-                  //await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  //    email: 'gabrielt.santos.gs@gmail.com',
-                  //    password: '123456');
-                  //final facebookLogin = FacebookLogin();
-                  //final result = await facebookLogin.logIn(['email']);
-
-                  //final FirebaseMessaging _firebaseMessaging =
-                  //    FirebaseMessaging();
-                  //print(await _firebaseMessaging.getToken());
-                },
+                onPressed: () => controller.login(),
                 color: ThemeUtils.primaryColor,
                 child: Text(
                   'Entrar',
@@ -150,7 +161,11 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
                 ],
               ),
             ),
-            FacebookButton(),
+            FacebookButton(
+              onTap: () {
+                controller.facebookLogin();
+              },
+            ),
             FlatButton(
               onPressed: () {},
               child: Text('Cadastra-se'),
