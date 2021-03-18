@@ -9,9 +9,6 @@ import 'package:cuidapet/app/repository/shared_prefs_respository.dart';
 class UsuarioRepository {
   Future<AccessTokenModel> login(String email,
       {String password, bool facebookLogin = false, String avatar = ''}) async {
-    print(email);
-    print(password);
-    print(facebookLogin);
     return CustomDio.instance.post('/login', data: {
       'login': email,
       'senha': password,
@@ -31,7 +28,12 @@ class UsuarioRepository {
 
   Future<UsuarioModel> recuperaDadosUsuario() async {
     return CustomDio.authInstance
-        .patch('/usuario')
+        .get('/usuario')
         .then((value) => UsuarioModel.fromJson(value.data));
+  }
+
+  Future<void> cadastrarUsuario(String email, String senha) async {
+    await CustomDio.instance
+        .post('/login/cadastrar', data: {'email': email, 'senha': senha});
   }
 }

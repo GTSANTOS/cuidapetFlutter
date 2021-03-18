@@ -46,6 +46,8 @@ class UsuarioService {
       prefs.registerAccessToken(confirmModel.accessToken);
       SecurityStorageRepository()
           .registerRefreshToken(confirmModel.refreshToken);
+      final dadosUsuario = await _repository.recuperaDadosUsuario();
+      await prefs.registerDadosUsuario(dadosUsuario);
     } on PlatformException catch (e) {
       print('Erro ao fazer login no firebase $e');
       rethrow;
@@ -59,5 +61,12 @@ class UsuarioService {
       print('Erro ao fazer login $e');
       rethrow;
     }
+  }
+
+  Future<void> cadastrarUsuario(String email, String senha) async {
+    await _repository.cadastrarUsuario(email, senha);
+    var fireAuth = FirebaseAuth.instance;
+    await fireAuth.createUserWithEmailAndPassword(
+        email: email, password: senha);
   }
 }

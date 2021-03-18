@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cuidapet/app/core/dio/custom_dio.dart';
+import 'package:cuidapet/app/core/database/connection.dart';
 import 'package:cuidapet/app/shared/components/facebook_button.dart';
 import 'package:cuidapet/app/shared/theme_utils.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +8,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'login_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -23,42 +20,57 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
   //use 'controller' variable to access controller
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    teste();
+  }
+
+  Future<void> teste() async {
+    var db = await Connection().instance;
+    var resultado = await db.rawQuery('select * from endereco');
+    print(resultado);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeUtils.primaryColor,
-      body: Container(
-        width: ScreenUtil().screenWidth,
-        height: ScreenUtil().screenHeight,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: ScreenUtil().screenWidth,
-              height: ScreenUtil().screenHeight < 700
-                  ? 800
-                  : ScreenUtil().screenHeight * .95,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(
-                          'lib/assets/images/login_background.png'))),
-            ),
-            Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(
-                    top: Platform.isIOS
-                        ? ScreenUtil().statusBarHeight + 30
-                        : ScreenUtil().statusBarHeight),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'lib/assets/images/logo.png',
-                      width: ScreenUtil().setWidth(400),
-                      fit: BoxFit.fill,
-                    ),
-                    _buildForm(),
-                  ],
-                )),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          width: ScreenUtil().screenWidth,
+          height: ScreenUtil().screenHeight,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: ScreenUtil().screenWidth,
+                height: ScreenUtil().screenHeight < 700
+                    ? 800
+                    : ScreenUtil().screenHeight * .95,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage(
+                            'lib/assets/images/login_background.png'))),
+              ),
+              Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                      top: Platform.isIOS
+                          ? ScreenUtil().statusBarHeight + 30
+                          : ScreenUtil().statusBarHeight),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'lib/assets/images/logo.png',
+                        width: ScreenUtil().setWidth(400),
+                        fit: BoxFit.fill,
+                      ),
+                      _buildForm(),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -167,7 +179,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginController> {
               },
             ),
             FlatButton(
-              onPressed: () {},
+              onPressed: () => Modular.link.pushNamed('/cadastro'),
               child: Text('Cadastra-se'),
             )
           ],
